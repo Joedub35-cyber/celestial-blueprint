@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AstroSphere | Celestial Astrological Blueprint</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            midnight: '#0b0f19',
+            celestial: '#1a233a',
+            starlight: '#fbbf24',
+            bronze: '#d97706',
+            cosmic: '#8b5cf6',
+            nebula: '#ec4899',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            serif: ['Cinzel', 'Georgia', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #fbbf24; }
+    
+    .glow-gold { box-shadow: 0 0 20px rgba(251, 191, 36, 0.25); }
+    .glow-purple { box-shadow: 0 0 20px rgba(139, 92, 246, 0.25); }
+    .glass-card { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.8; }
+    }
+    .animate-pulse-glow { animation: pulseGlow 4s infinite ease-in-out; }
+  </style>
+</head>
+<body class="min-h-full flex flex-col font-sans bg-slate-950 text-slate-100 antialiased selection:bg-starlight selection:text-slate-950">
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed top-20 right-4 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+  <!-- Background Starlight Decoration -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-40">
+    <div class="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-purple-900/30 rounded-full blur-[120px] animate-pulse-glow"></div>
+    <div class="absolute bottom-[-10%] right-[10%] w-[600px] h-[600px] bg-amber-900/20 rounded-full blur-[150px] animate-pulse-glow" style="animation-delay: 2s;"></div>
+  </div>
+
+  <div class="relative z-10 flex-grow flex flex-col">
+    <!-- Navbar -->
+    <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-filter blur-md sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500 to-purple-600 flex items-center justify-center text-slate-950 font-bold text-xl shadow-lg shadow-amber-500/20">
+            ✦
+          </div>
+          <span class="font-serif font-bold text-xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-100">
+            ASTROSPHERE
+          </span>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <button id="openLibraryBtn" class="py-2 px-3.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/50 text-xs font-semibold text-slate-200 hover:text-amber-300 transition flex items-center space-x-2">
+            <span>📚 Saved Library</span>
+            <span id="libraryCountBadge" class="w-5 h-5 rounded-full bg-amber-500/20 text-amber-300 font-mono text-[11px] flex items-center justify-center">0</span>
+          </button>
+          <div class="hidden sm:flex text-xs text-slate-400 font-mono items-center space-x-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span id="cloudStatusText">CLOUD SYNC ACTIVE</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+      
+      <!-- HERO / INTRO SECTION -->
+      <section class="text-center mb-10 max-w-3xl mx-auto">
+        <h1 class="font-serif text-3xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-100 via-amber-300 to-purple-200 mb-4 tracking-tight">
+          Cast Your Celestial Blueprint
+        </h1>
+        <p class="text-slate-400 text-sm sm:text-base leading-relaxed">
+          Unlock your comprehensive natal placements, 12-house archetypal mapping, geometric aspectarian, and live planetary transit overlays synthesized in real time.
+        </p>
+      </section>
+
+      <!-- 1. USER INPUT FORM -->
+      <section class="mb-12">
+        <div class="glass-card rounded-2xl p-6 sm:p-8 shadow-2xl border border-amber-500/20 max-w-4xl mx-auto relative overflow-hidden">
+          <div class="absolute top-0 right-0 -mr-16 -mt-16 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl"></div>
+
+          <form id="astroForm" class="space-y-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <!-- First Name -->
+              <div>
+                <label for="firstName" class="block text-xs font-semibold uppercase tracking-wider text-amber-300/90 mb-2">First Name</label>
+                <input type="text" id="firstName" required value="Alexander"
+                  class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
+                  placeholder="e.g. Selena">
+              </div>
+
+              <!-- Last Name -->
+              <div>
+                <label for="lastName" class="block text-xs font-semibold uppercase tracking-wider text-amber-300/90 mb-2">Last Name</label>
+                <input type="text" id="lastName" required value="Vance"
+                  class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
+                  placeholder="e.g. Gomez">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- Date of Birth -->
+              <div>
+                <label for="birthDate" class="block text-xs font-semibold uppercase tracking-wider text-amber-300/90 mb-2">Date of Birth</label>
+                <input type="date" id="birthDate" required value="1995-10-24"
+                  class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition">
+              </div>
+
+              <!-- Time of Birth & Unknown Checkbox -->
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <label for="birthTime" class="text-xs font-semibold uppercase tracking-wider text-amber-300/90">Time of Birth</label>
+                  <label class="inline-flex items-center text-xs text-slate-400 cursor-pointer hover:text-slate-200 transition">
+                    <input type="checkbox" id="unknownTimeToggle" class="sr-only peer">
+                    <div class="w-7 h-4 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-300 after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-amber-500 relative"></div>
+                    <span class="ml-2 font-mono text-[11px]">Solar Chart</span>
+                  </label>
+                </div>
+                <input type="time" id="birthTime" value="14:30"
+                  class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition disabled:opacity-40 disabled:cursor-not-allowed">
+              </div>
+
+              <!-- Place of Birth -->
+              <div>
+                <label for="birthPlace" class="block text-xs font-semibold uppercase tracking-wider text-amber-300/90 mb-2">Place of Birth (City, Country)</label>
+                <input type="text" id="birthPlace" required value="Florence, Italy"
+                  class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
+                  placeholder="e.g. Kyoto, Japan">
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="pt-2">
+              <button type="submit" id="submitBtn"
+                class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 text-slate-950 font-serif font-bold text-lg tracking-wide shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 hover:scale-[1.01] active:scale-[0.99] transition duration-200 flex items-center justify-center space-x-2">
+                <span>✦ CAST ASTROLOGICAL BLUEPRINT ✦</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- RESULTS DASHBOARD -->
+      <section id="dashboard" class="space-y-10 hidden">
+
+        <!-- DASHBOARD ACTION TOOLBAR -->
+        <div class="flex flex-wrap items-center justify-between gap-3 p-4 bg-slate-900/90 rounded-2xl border border-slate-800">
+          <div class="flex items-center space-x-2 text-xs font-mono text-slate-300">
+            <span>ACTIVE BLUEPRINT READY</span>
+          </div>
+          <div class="flex items-center space-x-3">
+            <button id="saveBlueprintBtn" class="py-2 px-4 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-xs font-bold transition flex items-center space-x-2">
+              <span>💾 Save to Library</span>
+            </button>
+            <button id="shareBlueprintBtn" class="py-2 px-4 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/40 text-purple-300 text-xs font-bold transition flex items-center space-x-2">
+              <span>🔗 Share Blueprint Link</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2A. HEADER BANNER & AUDIO PLAYER SYNTHESIS -->
+        <div class="glass-card rounded-2xl p-6 sm:p-8 border border-amber-500/30 shadow-2xl relative overflow-hidden">
+          <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+            <!-- User Metadata & Big Three -->
+            <div class="space-y-4">
+              <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono uppercase tracking-widest">
+                <span>✦ Official Chart Render</span>
+                <span id="chartTypeBadge">• Precise Natal</span>
+              </div>
+              
+              <div>
+                <h2 id="userNameHeader" class="font-serif text-3xl sm:text-4xl font-extrabold text-amber-100 tracking-wide">
+                  Alexander Vance
+                </h2>
+                <p id="userBirthMeta" class="text-sm text-slate-400 font-mono mt-1">
+                  Born Oct 24, 1995 at 14:30 | Florence, Italy
+                </p>
+              </div>
+
+              <!-- BIG THREE HIGHLIGHT BADGES -->
+              <div class="grid grid-cols-3 gap-2 sm:gap-4 pt-2">
+                <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 text-center transition hover:border-amber-500/40">
+                  <span class="block text-[10px] text-slate-400 uppercase font-mono tracking-wider">Sun Sign</span>
+                  <div class="flex items-center justify-center space-x-1 mt-1">
+                    <span id="sunSymbol" class="text-amber-400 text-lg sm:text-2xl">♏</span>
+                    <span id="sunName" class="font-serif font-bold text-slate-100 text-sm sm:text-base">Scorpio</span>
+                  </div>
+                  <span id="sunDeg" class="text-[11px] text-slate-400 font-mono block mt-0.5">01° 14'</span>
+                </div>
+
+                <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 text-center transition hover:border-amber-500/40">
+                  <span class="block text-[10px] text-slate-400 uppercase font-mono tracking-wider">Moon Sign</span>
+                  <div class="flex items-center justify-center space-x-1 mt-1">
+                    <span id="moonSymbol" class="text-slate-300 text-lg sm:text-2xl">♏</span>
+                    <span id="moonName" class="font-serif font-bold text-slate-100 text-sm sm:text-base">Scorpio</span>
+                  </div>
+                  <span id="moonDeg" class="text-[11px] text-slate-400 font-mono block mt-0.5">14° 42'</span>
+                </div>
+
+                <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 text-center transition hover:border-amber-500/40">
+                  <span class="block text-[10px] text-slate-400 uppercase font-mono tracking-wider">Ascendant (AC)</span>
+                  <div class="flex items-center justify-center space-x-1 mt-1">
+                    <span id="ascSymbol" class="text-purple-400 text-lg sm:text-2xl">♒</span>
+                    <span id="ascName" class="font-serif font-bold text-slate-100 text-sm sm:text-base">Aquarius</span>
+                  </div>
+                  <span id="ascDeg" class="text-[11px] text-slate-400 font-mono block mt-0.5">22° 08'</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- AUDIO PLAYER SYNTHESIS -->
+            <div class="bg-slate-900/95 border border-purple-500/30 rounded-2xl p-5 lg:w-96 flex flex-col justify-between shadow-xl">
+              <div>
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-xs font-mono text-purple-300 uppercase tracking-wider flex items-center space-x-2">
+                    <span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
+                    <span>Audio Synthesis Player</span>
+                  </span>
+                  <span id="audioStatus" class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800">Ready</span>
+                </div>
+                <h3 class="font-serif font-bold text-base text-slate-100">Executive Blueprint Briefing</h3>
+                <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                  Generates spoken summary of your Big Three archetype, elemental emphasis, dominant house, & transit alerts.
+                </p>
+              </div>
+
+              <!-- Audio Controls -->
+              <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between gap-2">
+                <button id="playAudioBtn" class="flex-1 py-2.5 px-3 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-medium text-xs flex items-center justify-center space-x-2 transition shadow-md shadow-purple-600/30">
+                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  <span id="playAudioLabel">Play Insight</span>
+                </button>
+                <button id="pauseAudioBtn" disabled class="p-2.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white disabled:opacity-40 transition" title="Pause">
+                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+                <button id="stopAudioBtn" disabled class="p-2.5 rounded-lg bg-slate-800 text-slate-400 hover:text-rose-400 disabled:opacity-40 transition" title="Stop">
+                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NAVIGATION TABS -->
+        <div class="flex border-b border-slate-800 space-x-2 sm:space-x-8 overflow-x-auto">
+          <button data-tab="placements" class="tab-btn py-3 px-4 text-sm font-semibold border-b-2 border-amber-400 text-amber-300 flex items-center space-x-2 whitespace-nowrap">
+            <span>✦ Core Placements</span>
+          </button>
+          <button data-tab="chartWheel" class="tab-btn py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 whitespace-nowrap">
+            <span>❂ Natal Wheel Visual</span>
+          </button>
+          <button data-tab="houses" class="tab-btn py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 whitespace-nowrap">
+            <span>🏛 12 Houses Mapping</span>
+          </button>
+          <button data-tab="aspects" class="tab-btn py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 whitespace-nowrap">
+            <span>☌ Aspectarian & Patterns</span>
+          </button>
+          <button data-tab="transits" class="tab-btn py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 whitespace-nowrap">
+            <span>⚡ Live Daily Transits</span>
+          </button>
+        </div>
+
+        <!-- TAB CONTENT CONTAINER -->
+        <div class="space-y-8">
+
+          <!-- TAB 1: CORE PLACEMENTS TABLE -->
+          <div id="tab-placements" class="tab-content space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 class="font-serif text-2xl font-bold text-slate-100">Planetary & Celestial Positions</h3>
+                <p class="text-sm text-slate-400">Detailed overview of core luminaries, inner planets, outer planets, and chart angles.</p>
+              </div>
+              <div class="flex items-center space-x-2 text-xs font-mono">
+                <span class="px-3 py-1 bg-slate-900 border border-slate-800 rounded-lg text-amber-300" id="elementalSummary">Elements: Fire (2) Earth (3) Air (3) Water (4)</span>
+              </div>
+            </div>
+
+            <div class="glass-card rounded-2xl overflow-hidden border border-slate-800 shadow-xl">
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                  <thead class="bg-slate-900/90 text-amber-300/90 font-mono text-xs uppercase tracking-wider border-b border-slate-800">
+                    <tr>
+                      <th class="py-4 px-6">Body</th>
+                      <th class="py-4 px-6">Zodiac Sign</th>
+                      <th class="py-4 px-6">Degree</th>
+                      <th class="py-4 px-6">Element / Modality</th>
+                      <th class="py-4 px-6">House</th>
+                      <th class="py-4 px-6">Archetype & Core Meaning</th>
+                    </tr>
+                  </thead>
+                  <tbody id="placementsTableBody" class="divide-y divide-slate-800/60 font-medium">
+                    <!-- Dynamic Rows Insertion -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: NATAL WHEEL VISUAL -->
+          <div id="tab-chartWheel" class="tab-content space-y-6 hidden">
+            <div class="text-center max-w-xl mx-auto">
+              <h3 class="font-serif text-2xl font-bold text-slate-100">Interactive Horoscope Wheel</h3>
+              <p class="text-sm text-slate-400 mt-1">Dynamic visual matrix illustrating house divisions and angular geometric placements.</p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-6 flex flex-col items-center justify-center border border-slate-800 shadow-xl">
+              <div class="w-full max-w-xl aspect-square relative flex items-center justify-center" id="wheelSvgContainer">
+                <!-- SVG dynamically rendered here -->
+              </div>
+              <div class="mt-6 flex flex-wrap justify-center gap-4 text-xs font-mono text-slate-400">
+                <span class="flex items-center"><span class="w-3 h-0.5 bg-blue-400 inline-block mr-1"></span> Trine / Sextile (Soft)</span>
+                <span class="flex items-center"><span class="w-3 h-0.5 bg-rose-500 inline-block mr-1"></span> Square / Opposition (Hard)</span>
+                <span class="flex items-center"><span class="w-3 h-0.5 bg-amber-400 inline-block mr-1"></span> Conjunction (Neutral/Strong)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: 12 HOUSES MAPPING -->
+          <div id="tab-houses" class="tab-content space-y-6 hidden">
+            <div>
+              <h3 class="font-serif text-2xl font-bold text-slate-100">The 12 House Mapping Table</h3>
+              <p class="text-sm text-slate-400">Itemized breakdown of life domains, cusp signs, and occupying celestial energies.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="housesGridContainer">
+              <!-- Dynamic 12 House Cards -->
+            </div>
+          </div>
+
+          <!-- TAB 4: ASPECTARIAN & PATTERN TRACKER -->
+          <div id="tab-aspects" class="tab-content space-y-8 hidden">
+            <div>
+              <h3 class="font-serif text-2xl font-bold text-slate-100">Geometric Aspectarian & Dynamic Patterns</h3>
+              <p class="text-sm text-slate-400">Primary geometric relationships (Conjunction, Opposition, Trine, Square) shaping behavioral dynamics.</p>
+            </div>
+
+            <!-- Pattern Callout Cards -->
+            <div class="space-y-4">
+              <h4 class="text-xs font-mono uppercase text-amber-300/90 tracking-widest">Key Dynamic Psychological Patterns</h4>
+              <div id="patternCallouts" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Dynamic Callout Cards Inserted Here -->
+              </div>
+            </div>
+
+            <!-- Aspect Matrix Table -->
+            <div class="glass-card rounded-2xl overflow-hidden border border-slate-800 shadow-xl">
+              <div class="p-4 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
+                <h4 class="font-serif font-bold text-slate-200 text-sm">Active Geometric Aspects</h4>
+                <span class="text-xs font-mono text-slate-400">Max Orb: 8.0°</span>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                  <thead class="bg-slate-950 text-slate-400 font-mono text-xs uppercase border-b border-slate-800">
+                    <tr>
+                      <th class="py-3 px-5">Planets Involved</th>
+                      <th class="py-3 px-5">Aspect Type</th>
+                      <th class="py-3 px-5">Orb</th>
+                      <th class="py-3 px-5">Dynamic Interpretation</th>
+                    </tr>
+                  </thead>
+                  <tbody id="aspectsTableBody" class="divide-y divide-slate-800/60">
+                    <!-- Dynamic Aspect Rows -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 5: LIVE DAILY TRANSIT TRACKING -->
+          <div id="tab-transits" class="tab-content space-y-6 hidden">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 class="font-serif text-2xl font-bold text-slate-100">Live Daily Transit Overlay</h3>
+                <p class="text-sm text-slate-400">Current real-time sky positions overlaying your birth placements.</p>
+              </div>
+              <div class="bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 text-xs font-mono text-amber-300">
+                Current Sky UTC: <span id="currentTransitDate" class="text-slate-100 font-bold"></span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <!-- Transit Highlights Sidebar -->
+              <div class="space-y-4">
+                <div class="glass-card rounded-2xl p-5 border border-purple-500/30">
+                  <h4 class="font-serif font-bold text-slate-100 mb-2">Transit Synthesis</h4>
+                  <p class="text-xs text-slate-400 leading-relaxed mb-4" id="transitSummaryText">
+                    Calculating current astronomical alignments against natal positions...
+                  </p>
+                  <div class="space-y-3" id="transitAlertList">
+                    <!-- Dynamic Transit Alerts -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Transits vs Natal Placements Table -->
+              <div class="lg:col-span-2 glass-card rounded-2xl overflow-hidden border border-slate-800">
+                <div class="p-4 bg-slate-900/90 border-b border-slate-800">
+                  <h4 class="font-serif font-bold text-slate-200 text-sm">Active Planetary Transits</h4>
+                </div>
+                <div class="overflow-x-auto">
+                  <table class="w-full text-left text-sm">
+                    <thead class="bg-slate-950 text-slate-400 font-mono text-xs uppercase border-b border-slate-800">
+                      <tr>
+                        <th class="py-3 px-4">Transit Body</th>
+                        <th class="py-3 px-4">Current Sign</th>
+                        <th class="py-3 px-4">Aspect</th>
+                        <th class="py-3 px-4">Natal Planet</th>
+                        <th class="py-3 px-4">Forecast Effect</th>
+                      </tr>
+                    </thead>
+                    <tbody id="transitsTableBody" class="divide-y divide-slate-800/60">
+                      <!-- Dynamic Transit Rows -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- SAVED CHARTS LIBRARY MODAL -->
+    <div id="libraryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden">
+      <div class="glass-card rounded-2xl border border-slate-800 w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden shadow-2xl">
+        <div class="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
+          <div>
+            <h3 class="font-serif font-bold text-lg text-amber-200">Saved Blueprints Library</h3>
+            <p class="text-xs text-slate-400">Access saved celestial records and load them instantly.</p>
+          </div>
+          <button id="closeLibraryBtn" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition">✕</button>
+        </div>
+        <div id="libraryListContainer" class="p-5 overflow-y-auto space-y-3 flex-grow divide-y divide-slate-800/60">
+          <div class="text-center py-8 text-slate-500 text-sm font-mono">No saved blueprints found yet.</div>
+        </div>
+        <div class="p-4 border-t border-slate-800 bg-slate-950 flex justify-end">
+          <button id="closeLibraryFooterBtn" class="py-2 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-slate-900 bg-slate-950 py-6 text-center text-xs font-mono text-slate-500">
+      <div class="max-w-7xl mx-auto px-4">
+        <p>AstroSphere Celestial Engine &copy; 2026. Astronomical algorithms based on standard ecliptic coordinate projections.</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- FIREBASE & CORE SCRIPT MODULE -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
+    import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+    import { getFirestore, collection, doc, setDoc, getDoc, getDocs, deleteDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+
+    /* ==========================================================================
+       STORAGE & FIREBASE INITIALIZATION
+       ========================================================================== */
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'astrosphere-app';
+    let db = null;
+    let auth = null;
+    let currentUser = null;
+
+    if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+      try {
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+
+        const initAuth = async () => {
+          try {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+              await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+              await signInAnonymously(auth);
+            }
+          } catch (e) {
+            console.warn("Auth initialization fallback:", e);
+          }
+        };
+        initAuth();
+
+        onAuthStateChanged(auth, (user) => {
+          currentUser = user;
+          if (user && window.astroApp) {
+            window.astroApp.initCloudListeners();
+          }
+        });
+      } catch (err) {
+        console.warn("Firebase config error:", err);
+      }
+    }
+
+    /* ==========================================================================
+       DATA STRUCTURES & CONSTANTS
+       ========================================================================== */
+    const ZODIAC_SIGNS = [
+      { name: 'Aries', symbol: '♈', element: 'Fire', modality: 'Cardinal', ruler: 'Mars' },
+      { name: 'Taurus', symbol: '♉', element: 'Earth', modality: 'Fixed', ruler: 'Venus' },
+      { name: 'Gemini', symbol: '♊', element: 'Air', modality: 'Mutable', ruler: 'Mercury' },
+      { name: 'Cancer', symbol: '♋', element: 'Water', modality: 'Cardinal', ruler: 'Moon' },
+      { name: 'Leo', symbol: '♌', element: 'Fire', modality: 'Fixed', ruler: 'Sun' },
+      { name: 'Virgo', symbol: '♍', element: 'Earth', modality: 'Mutable', ruler: 'Mercury' },
+      { name: 'Libra', symbol: '♎', element: 'Air', modality: 'Cardinal', ruler: 'Venus' },
+      { name: 'Scorpio', symbol: '♏', element: 'Water', modality: 'Fixed', ruler: 'Pluto' },
+      { name: 'Sagittarius', symbol: '♐', element: 'Fire', modality: 'Mutable', ruler: 'Jupiter' },
+      { name: 'Capricorn', symbol: '♑', element: 'Earth', modality: 'Cardinal', ruler: 'Saturn' },
+      { name: 'Aquarius', symbol: '♒', element: 'Air', modality: 'Fixed', ruler: 'Uranus' },
+      { name: 'Pisces', symbol: '♓', element: 'Water', modality: 'Mutable', ruler: 'Neptune' }
+    ];
+
+    const PLANETS_CONFIG = [
+      { id: 'Sun', name: 'Sun', symbol: '☉', type: 'luminary', desc: 'Core Ego, Vital Purpose, True Identity' },
+      { id: 'Moon', name: 'Moon', symbol: '☽', type: 'luminary', desc: 'Emotional Instincts, Inner Security, Subconscious' },
+      { id: 'Mercury', name: 'Mercury', symbol: '☿', type: 'personal', desc: 'Intellect, Communication Style, Processing' },
+      { id: 'Venus', name: 'Venus', symbol: '♀', type: 'personal', desc: 'Love Archetype, Values, Attraction & Aesthetics' },
+      { id: 'Mars', name: 'Mars', symbol: '♂', type: 'personal', desc: 'Drive, Ambition, Aggression & Energy Input' },
+      { id: 'Jupiter', name: 'Jupiter', symbol: '♃', type: 'social', desc: 'Expansion, Philosophy, Luck & Higher Learning' },
+      { id: 'Saturn', name: 'Saturn', symbol: '♄', type: 'social', desc: 'Structure, Discipline, Karma & Master Lessons' },
+      { id: 'Uranus', name: 'Uranus', symbol: '♅', type: 'transpersonal', desc: 'Innovation, Rebellion, Sudden Insight & Awakening' },
+      { id: 'Neptune', name: 'Neptune', symbol: '♆', type: 'transpersonal', desc: 'Dreams, Mysticism, Intuition & Idealism' },
+      { id: 'Pluto', name: 'Pluto', symbol: '♇', type: 'transpersonal', desc: 'Rebirth, Transformation, Power & Alchemy' },
+      { id: 'Ascendant', name: 'Ascendant (AC)', symbol: 'AC', type: 'angle', desc: 'First Impression, Physical Mask, Life Approach' },
+      { id: 'Midheaven', name: 'Midheaven (MC)', symbol: 'MC', type: 'angle', desc: 'Career Zenith, Reputation, Public Legacy' }
+    ];
+
+    const HOUSES_META = [
+      { num: 1, title: 'House of Self & Identity', theme: 'First impressions, vitality, personality mask, physical appearance.' },
+      { num: 2, title: 'House of Wealth & Values', theme: 'Personal resources, financial security, self-worth, tangible possessions.' },
+      { num: 3, title: 'House of Mind & Locality', theme: 'Communication, siblings, intellect, short journeys, daily environment.' },
+      { num: 4, title: 'House of Home & Roots', theme: 'Family origins, emotional foundation, inner sanctuary, maternal lineage.' },
+      { num: 5, title: 'House of Joy & Creation', theme: 'Creative expression, romance, recreation, playfulness, speculation.' },
+      { num: 6, title: 'House of Wellness & Routine', theme: 'Daily habits, service, physical health, work environment, craft.' },
+      { num: 7, title: 'House of Partnerships', theme: 'One-on-one bonds, marriage, open contracts, business partnerships.' },
+      { num: 8, title: 'House of Alchemy & Shared Assets', theme: 'Transformation, intimacy, joint finances, taboo, deep psychological rebirth.' },
+      { num: 9, title: 'House of Vision & Expansion', theme: 'Higher education, belief systems, long travel, philosophy, publishing.' },
+      { num: 10, title: 'House of Career & Vocation', theme: 'Public standing, ambition, legacy, executive reputation, calling.' },
+      { num: 11, title: 'House of Community & Hopes', theme: 'Social networks, future dreams, collective ideals, alliances, humanitarianism.' },
+      { num: 12, title: 'House of Unconscious & Solitude', theme: 'Subconscious shadow, spiritual retreats, Karma, hidden talents, closure.' }
+    ];
+
+    /* ==========================================================================
+       ASTRONOMICAL ENGINE
+       ========================================================================== */
+    class AstroEngine {
+      static calculateChart(birthDateStr, birthTimeStr, isSolarChart) {
+        const dateObj = new Date(`${birthDateStr}T${isSolarChart ? '12:00' : (birthTimeStr || '12:00')}`);
+        const dayOfYear = this.getDayOfYear(dateObj);
+        const year = dateObj.getFullYear();
+        const timeFraction = (dateObj.getHours() + dateObj.getMinutes() / 60) / 24;
+        const julianFactor = (year - 2000) * 365.25 + dayOfYear + timeFraction;
+
+        const rawPositions = {
+          Sun: (280.46 + 0.9856474 * julianFactor) % 360,
+          Moon: (218.316 + 13.176396 * julianFactor) % 360,
+          Mercury: (252.25 + 4.09233 * julianFactor) % 360,
+          Venus: (181.98 + 1.60213 * julianFactor) % 360,
+          Mars: (355.43 + 0.52403 * julianFactor) % 360,
+          Jupiter: (34.35 + 0.08308 * julianFactor) % 360,
+          Saturn: (50.07 + 0.03346 * julianFactor) % 360,
+          Uranus: (314.05 + 0.01173 * julianFactor) % 360,
+          Neptune: (304.35 + 0.00598 * julianFactor) % 360,
+          Pluto: (238.92 + 0.00397 * julianFactor) % 360,
+        };
+
+        Object.keys(rawPositions).forEach(k => {
+          if (rawPositions[k] < 0) rawPositions[k] += 360;
+        });
+
+        let ascLongitude = isSolarChart ? rawPositions.Sun : (rawPositions.Sun + (timeFraction * 360) + 90) % 360;
+        let mcLongitude = (ascLongitude - 90 + 360) % 360;
+
+        rawPositions['Ascendant'] = ascLongitude;
+        rawPositions['Midheaven'] = mcLongitude;
+
+        const placements = PLANETS_CONFIG.map(config => {
+          const degTotal = rawPositions[config.id];
+          const signIndex = Math.floor(degTotal / 30);
+          const signDeg = degTotal % 30;
+          const sign = ZODIAC_SIGNS[signIndex];
+          let houseNum = Math.floor(((degTotal - ascLongitude + 360) % 360) / 30) + 1;
+
+          return {
+            ...config,
+            longitude: degTotal,
+            sign: sign.name,
+            symbol: sign.symbol,
+            signDegree: signDeg,
+            degreeFormatted: `${Math.floor(signDeg).toString().padStart(2, '0')}° ${Math.floor((signDeg % 1) * 60).toString().padStart(2, '0')}'`,
+            element: sign.element,
+            modality: sign.modality,
+            house: houseNum
+          };
+        });
+
+        const houses = [];
+        for (let i = 0; i < 12; i++) {
+          const cuspLong = (ascLongitude + (i * 30)) % 360;
+          const signIndex = Math.floor(cuspLong / 30);
+          const sign = ZODIAC_SIGNS[signIndex];
+          const planetsInHouse = placements.filter(p => p.house === (i + 1));
+
+          houses.push({
+            number: i + 1,
+            meta: HOUSES_META[i],
+            cuspLongitude: cuspLong,
+            sign: sign.name,
+            symbol: sign.symbol,
+            planets: planetsInHouse
+          });
+        }
+
+        const aspects = this.calculateAspects(placements);
+        return { placements, houses, aspects, ascLongitude };
+      }
+
+      static getDayOfYear(date) {
+        const start = new Date(date.getFullYear(), 0, 0);
+        const diff = date - start;
+        return Math.floor(diff / (1000 * 60 * 60 * 24));
+      }
+
+      static calculateAspects(placements) {
+        const aspectTypes = [
+          { name: 'Conjunction', angle: 0, orb: 8, symbol: '☌', quality: 'Hard/Neutral' },
+          { name: 'Sextile', angle: 60, orb: 6, symbol: '⚹', quality: 'Soft' },
+          { name: 'Square', angle: 90, orb: 7, symbol: '□', quality: 'Hard' },
+          { name: 'Trine', angle: 120, orb: 8, symbol: '△', quality: 'Soft' },
+          { name: 'Opposition', angle: 180, orb: 8, symbol: '☍', quality: 'Hard' },
+        ];
+
+        const aspects = [];
+        for (let i = 0; i < placements.length; i++) {
+          for (let j = i + 1; j < placements.length; j++) {
+            const p1 = placements[i];
+            const p2 = placements[j];
+            if (p1.id === 'Ascendant' || p1.id === 'Midheaven' || p2.id === 'Ascendant' || p2.id === 'Midheaven') continue;
+
+            let diff = Math.abs(p1.longitude - p2.longitude);
+            if (diff > 180) diff = 360 - diff;
+
+            for (const asp of aspectTypes) {
+              const orbVal = Math.abs(diff - asp.angle);
+              if (orbVal <= asp.orb) {
+                aspects.push({
+                  p1, p2,
+                  type: asp.name,
+                  symbol: asp.symbol,
+                  quality: asp.quality,
+                  orb: orbVal.toFixed(1),
+                  interpretation: this.generateAspectMeaning(p1, p2, asp.name)
+                });
+                break;
+              }
+            }
+          }
+        }
+        return aspects;
+      }
+
+      static generateAspectMeaning(p1, p2, aspectType) {
+        const pairKey = [p1.id, p2.id].sort().join('-');
+        const DB = {
+          'Mars-Sun': 'High physical drive, courageous action, but potential for direct clash of willpower.',
+          'Moon-Sun': 'Harmony between emotional instincts and conscious identity. Inner alignment.',
+          'Jupiter-Sun': 'Optimistic worldview, abundant opportunity, risk of over-expansion or indulgence.',
+          'Pluto-Sun': 'Intense personal magnetism, transformative drive, desire for deep mastery and power.',
+          'Mars-Uranus': 'Sudden electric breakthroughs, rebellious energy, unpredictable creative spikes.',
+          'Moon-Venus': 'Warm social grace, artistic sensitivity, harmony in personal attachments.',
+          'Mercury-Saturn': 'Disciplined mental focus, rigorous analytical ability, potential for self-critical thoughts.',
+          'Neptune-Venus': 'Romantic idealism, elevated aesthetic vision, vulnerability to unrealistic expectations.'
+        };
+        if (DB[pairKey]) return DB[pairKey];
+        if (aspectType === 'Trine' || aspectType === 'Sextile') return `Fluid, supportive interplay between ${p1.name} and ${p2.name}.`;
+        if (aspectType === 'Square' || aspectType === 'Opposition') return `Dynamic tension linking ${p1.name} and ${p2.name}. Demands conscious integration.`;
+        return `Powerful synthesis where ${p1.name} and ${p2.name} blend together completely.`;
+      }
+
+      static calculateLiveTransits(natalPlacements) {
+        const today = new Date();
+        const transitChart = this.calculateChart(
+          today.toISOString().split('T')[0], 
+          `${today.getHours()}:${today.getMinutes()}`, 
+          false
+        );
+
+        const transitAspects = [];
+        const outerTransits = transitChart.placements.filter(p => ['Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto'].includes(p.id));
+        const natalCore = natalPlacements.filter(p => ['Sun', 'Moon', 'Mercury', 'Venus', 'Mars', 'Ascendant'].includes(p.id));
+
+        outerTransits.forEach(tPlanet => {
+          natalCore.forEach(nPlanet => {
+            let diff = Math.abs(tPlanet.longitude - nPlanet.longitude);
+            if (diff > 180) diff = 360 - diff;
+
+            if (diff <= 6) transitAspects.push({ tPlanet, nPlanet, aspect: 'Conjunction (☌)', effect: `Transiting ${tPlanet.name} activates your Natal ${nPlanet.name}.` });
+            else if (Math.abs(diff - 90) <= 5) transitAspects.push({ tPlanet, nPlanet, aspect: 'Square (□)', effect: `${tPlanet.name} challenges your Natal ${nPlanet.name} to evolve.` });
+            else if (Math.abs(diff - 120) <= 5) transitAspects.push({ tPlanet, nPlanet, aspect: 'Trine (△)', effect: `Supportive window for ${tPlanet.name} harmonizing with ${nPlanet.name}.` });
+            else if (Math.abs(diff - 180) <= 6) transitAspects.push({ tPlanet, nPlanet, aspect: 'Opposition (☍)', effect: `${tPlanet.name} highlights tension across ${nPlanet.name}.` });
+          });
+        });
+
+        return { transitChart, transitAspects };
+      }
+    }
+
+    /* ==========================================================================
+       AUDIO SYNTHESIS ENGINE
+       ========================================================================== */
+    class AudioSynthesisEngine {
+      constructor() {
+        this.synth = window.speechSynthesis;
+        this.utterance = null;
+        this.isPlaying = false;
+        
+        this.playBtn = document.getElementById('playAudioBtn');
+        this.pauseBtn = document.getElementById('pauseAudioBtn');
+        this.stopBtn = document.getElementById('stopAudioBtn');
+        this.statusBadge = document.getElementById('audioStatus');
+        this.playLabel = document.getElementById('playAudioLabel');
+
+        this.bindEvents();
+      }
+
+      bindEvents() {
+        this.playBtn.addEventListener('click', () => this.handlePlayPause());
+        this.pauseBtn.addEventListener('click', () => this.pause());
+        this.stopBtn.addEventListener('click', () => this.stop());
+      }
+
+      prepareScript(userData, chartData, transitData) {
+        const sun = chartData.placements.find(p => p.id === 'Sun');
+        const moon = chartData.placements.find(p => p.id === 'Moon');
+        const asc = chartData.placements.find(p => p.id === 'Ascendant');
+        
+        const topTransit = transitData.transitAspects[0];
+        const transitWarning = topTransit 
+          ? `Current transit alert: Transiting ${topTransit.tPlanet.name} forms a ${topTransit.aspect} to your natal ${topTransit.nPlanet.name}.`
+          : `Current sky transits present a stable foundation for your personal growth.`;
+
+        return `Welcome ${userData.firstName}. Here is your astrological blueprint executive audio synthesis. 
+        Your Sun sign is in ${sun.sign}, illuminating your core life purpose in the ${sun.house} House. 
+        Your Moon sign rests in ${moon.sign}, driving your emotional subconscious needs. 
+        Your Rising sign is ${asc.sign}, defining your outer physical mask. 
+        ${transitWarning} Harness your elemental gifts today.`;
+      }
+
+      speak(text) {
+        if (!this.synth) return;
+
+        if (this.synth.speaking && this.synth.paused) {
+          this.synth.resume();
+          this.updateState('playing');
+          return;
+        }
+
+        this.synth.cancel();
+        this.utterance = new SpeechSynthesisUtterance(text);
+        this.utterance.rate = 0.95;
+
+        this.utterance.onstart = () => this.updateState('playing');
+        this.utterance.onend = () => this.updateState('stopped');
+        this.utterance.onerror = () => this.updateState('stopped');
+
+        this.synth.speak(this.utterance);
+      }
+
+      handlePlayPause() {
+        if (this.isPlaying) {
+          this.pause();
+        } else {
+          if (window.currentAudioScript) this.speak(window.currentAudioScript);
+        }
+      }
+
+      pause() {
+        if (this.synth && this.synth.speaking) {
+          this.synth.pause();
+          this.updateState('paused');
+        }
+      }
+
+      stop() {
+        if (this.synth) {
+          this.synth.cancel();
+          this.updateState('stopped');
+        }
+      }
+
+      updateState(state) {
+        if (state === 'playing') {
+          this.isPlaying = true;
+          this.statusBadge.innerText = 'Speaking';
+          this.statusBadge.className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 animate-pulse';
+          this.playLabel.innerText = 'Pause Briefing';
+          this.pauseBtn.disabled = false;
+          this.stopBtn.disabled = false;
+        } else if (state === 'paused') {
+          this.isPlaying = false;
+          this.statusBadge.innerText = 'Paused';
+          this.statusBadge.className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800';
+          this.playLabel.innerText = 'Resume Briefing';
+        } else {
+          this.isPlaying = false;
+          this.statusBadge.innerText = 'Ready';
+          this.statusBadge.className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800';
+          this.playLabel.innerText = 'Play Insight';
+          this.pauseBtn.disabled = true;
+          this.stopBtn.disabled = true;
+        }
+      }
+    }
+
+    /* ==========================================================================
+       UI CONTROLLER & RENDERER
+       ========================================================================== */
+    class AppUI {
+      constructor() {
+        this.audioEngine = new AudioSynthesisEngine();
+        this.currentChartData = null;
+        this.userData = null;
+        this.savedBlueprints = [];
+        
+        this.initDOM();
+        this.bindEvents();
+        this.checkURLForChart();
+      }
+
+      showToast(message, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        let bg = 'bg-slate-900 border-amber-500/50 text-amber-200';
+        if (type === 'success') bg = 'bg-slate-900 border-emerald-500/50 text-emerald-200';
+        if (type === 'error') bg = 'bg-slate-900 border-rose-500/50 text-rose-200';
+
+        toast.className = `p-3 rounded-xl border ${bg} text-xs font-mono shadow-xl transition-all duration-300 transform translate-y-2 pointer-events-auto flex items-center justify-between space-x-4 max-w-xs`;
+        toast.innerHTML = `<span>${message}</span><button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white">✕</button>`;
+        container.appendChild(toast);
+
+        setTimeout(() => {
+          if (toast.parentElement) toast.remove();
+        }, 4000);
+      }
+
+      initDOM() {
+        this.form = document.getElementById('astroForm');
+        this.dashboard = document.getElementById('dashboard');
+        this.unknownTimeToggle = document.getElementById('unknownTimeToggle');
+        this.birthTimeInput = document.getElementById('birthTime');
+        this.libraryModal = document.getElementById('libraryModal');
+
+        this.processFormSubmission();
+      }
+
+      bindEvents() {
+        this.unknownTimeToggle.addEventListener('change', (e) => {
+          this.birthTimeInput.disabled = e.target.checked;
+        });
+
+        this.form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          this.processFormSubmission();
+        });
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const tabTarget = e.currentTarget.getAttribute('data-tab');
+            this.switchTab(tabTarget, e.currentTarget);
+          });
+        });
+
+        document.getElementById('saveBlueprintBtn').addEventListener('click', () => this.saveBlueprintToLibrary());
+        document.getElementById('shareBlueprintBtn').addEventListener('click', () => this.shareBlueprintLink());
+
+        document.getElementById('openLibraryBtn').addEventListener('click', () => this.openLibrary());
+        document.getElementById('closeLibraryBtn').addEventListener('click', () => this.closeLibrary());
+        document.getElementById('closeLibraryFooterBtn').addEventListener('click', () => this.closeLibrary());
+      }
+
+      checkURLForChart() {
+        const params = new URLSearchParams(window.location.search);
+        const encodedData = params.get('chart');
+        if (encodedData) {
+          try {
+            const parsed = JSON.parse(atob(decodeURIComponent(encodedData)));
+            document.getElementById('firstName').value = parsed.fn || 'Alexander';
+            document.getElementById('lastName').value = parsed.ln || 'Vance';
+            document.getElementById('birthDate').value = parsed.bd || '1995-10-24';
+            document.getElementById('birthTime').value = parsed.bt || '14:30';
+            this.unknownTimeToggle.checked = !!parsed.st;
+            this.birthTimeInput.disabled = !!parsed.st;
+            document.getElementById('birthPlace').value = parsed.bp || 'Florence, Italy';
+            
+            this.processFormSubmission();
+            this.showToast('Loaded shared blueprint from link!', 'success');
+          } catch(e) {
+            console.warn("Could not parse chart URL data", e);
+          }
+        }
+      }
+
+      switchTab(tabTarget, activeBtn) {
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.className = 'tab-btn py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 whitespace-nowrap';
+        });
+        activeBtn.className = 'tab-btn py-3 px-4 text-sm font-semibold border-b-2 border-amber-400 text-amber-300 flex items-center space-x-2 whitespace-nowrap';
+
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+        document.getElementById(`tab-${tabTarget}`).classList.remove('hidden');
+      }
+
+      processFormSubmission() {
+        const firstName = document.getElementById('firstName').value || 'Alexander';
+        const lastName = document.getElementById('lastName').value || 'Vance';
+        const birthDate = document.getElementById('birthDate').value || '1995-10-24';
+        const isSolarChart = this.unknownTimeToggle.checked;
+        const birthTime = isSolarChart ? '12:00' : (document.getElementById('birthTime').value || '12:00');
+        const birthPlace = document.getElementById('birthPlace').value || 'Florence, Italy';
+
+        this.userData = { firstName, lastName, birthDate, birthTime, isSolarChart, birthPlace };
+
+        this.currentChartData = AstroEngine.calculateChart(birthDate, birthTime, isSolarChart);
+        const transitData = AstroEngine.calculateLiveTransits(this.currentChartData.placements);
+
+        window.currentAudioScript = this.audioEngine.prepareScript(this.userData, this.currentChartData, transitData);
+
+        this.renderHeader();
+        this.renderPlacementsTable();
+        this.renderNatalWheel();
+        this.renderHousesGrid();
+        this.renderAspectarian();
+        this.renderTransitsTab(transitData);
+
+        this.dashboard.classList.remove('hidden');
+      }
+
+      /* ==========================================================================
+         SAVED PROGRESS & SHARING LOGIC
+         ========================================================================== */
+      async initCloudListeners() {
+        if (!db || !currentUser) return;
+        try {
+          const userChartsCol = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'charts');
+          onSnapshot(userChartsCol, (snapshot) => {
+            this.savedBlueprints = [];
+            snapshot.forEach(docSnap => {
+              this.savedBlueprints.push({ id: docSnap.id, ...docSnap.data() });
+            });
+            document.getElementById('libraryCountBadge').innerText = this.savedBlueprints.length;
+            this.renderLibraryList();
+          }, (err) => console.warn("Firestore snapshot error:", err));
+        } catch(e) {
+          console.warn("Cloud listener error:", e);
+        }
+      }
+
+      async saveBlueprintToLibrary() {
+        const sun = this.currentChartData.placements.find(p => p.id === 'Sun');
+        const moon = this.currentChartData.placements.find(p => p.id === 'Moon');
+        const asc = this.currentChartData.placements.find(p => p.id === 'Ascendant');
+
+        const chartRecord = {
+          userMeta: this.userData,
+          bigThree: {
+            sun: `${sun.sign} (${sun.degreeFormatted})`,
+            moon: `${moon.sign} (${moon.degreeFormatted})`,
+            asc: `${asc.sign} (${asc.degreeFormatted})`
+          },
+          savedAt: new Date().toISOString()
+        };
+
+        if (db && currentUser) {
+          try {
+            const docId = `chart_${Date.now()}`;
+            const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'charts', docId);
+            await setDoc(docRef, chartRecord);
+            this.showToast('Blueprint saved securely to Cloud Library!', 'success');
+          } catch(e) {
+            this.saveLocalFallback(chartRecord);
+          }
+        } else {
+          this.saveLocalFallback(chartRecord);
+        }
+      }
+
+      saveLocalFallback(chartRecord) {
+        chartRecord.id = `local_${Date.now()}`;
+        const existing = JSON.parse(localStorage.getItem('astro_saved_charts') || '[]');
+        existing.push(chartRecord);
+        localStorage.setItem('astro_saved_charts', JSON.stringify(existing));
+        this.savedBlueprints = existing;
+        document.getElementById('libraryCountBadge').innerText = existing.length;
+        this.showToast('Blueprint saved to local library!', 'success');
+        this.renderLibraryList();
+      }
+
+      shareBlueprintLink() {
+        const payload = {
+          fn: this.userData.firstName,
+          ln: this.userData.lastName,
+          bd: this.userData.birthDate,
+          bt: this.userData.birthTime,
+          st: this.userData.isSolarChart ? 1 : 0,
+          bp: this.userData.birthPlace
+        };
+
+        const encoded = encodeURIComponent(btoa(JSON.stringify(payload)));
+        const shareUrl = `${window.location.origin}${window.location.pathname}?chart=${encoded}`;
+
+        const tempInput = document.createElement('input');
+        tempInput.value = shareUrl;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+
+        this.showToast('Shareable link copied to clipboard!', 'success');
+      }
+
+      openLibrary() {
+        this.renderLibraryList();
+        this.libraryModal.classList.remove('hidden');
+      }
+
+      closeLibrary() {
+        this.libraryModal.classList.add('hidden');
+      }
+
+      renderLibraryList() {
+        const container = document.getElementById('libraryListContainer');
+        container.innerHTML = '';
+
+        let list = this.savedBlueprints;
+        if (!list || list.length === 0) {
+          const stored = localStorage.getItem('astro_saved_charts');
+          if (stored) list = JSON.parse(stored);
+        }
+
+        if (!list || list.length === 0) {
+          container.innerHTML = `<div class="text-center py-8 text-slate-500 text-sm font-mono">No saved blueprints found in your library yet.</div>`;
+          return;
+        }
+
+        list.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3';
+          
+          card.innerHTML = `
+            <div>
+              <h4 class="font-serif font-bold text-slate-100 text-base">${item.userMeta.firstName} ${item.userMeta.lastName}</h4>
+              <p class="text-xs text-slate-400 font-mono mt-0.5">${item.userMeta.birthDate} | ${item.userMeta.birthPlace}</p>
+              <div class="flex space-x-2 mt-2 font-mono text-[11px] text-amber-300">
+                <span>☉ ${item.bigThree?.sun || ''}</span>
+                <span>☽ ${item.bigThree?.moon || ''}</span>
+                <span>AC ${item.bigThree?.asc || ''}</span>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button class="load-btn py-1.5 px-3 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-bold transition">Load</button>
+              <button class="delete-btn py-1.5 px-3 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-bold transition">Delete</button>
+            </div>
+          `;
+
+          card.querySelector('.load-btn').addEventListener('click', () => {
+            document.getElementById('firstName').value = item.userMeta.firstName;
+            document.getElementById('lastName').value = item.userMeta.lastName;
+            document.getElementById('birthDate').value = item.userMeta.birthDate;
+            document.getElementById('birthTime').value = item.userMeta.birthTime;
+            this.unknownTimeToggle.checked = !!item.userMeta.isSolarChart;
+            this.birthTimeInput.disabled = !!item.userMeta.isSolarChart;
+            document.getElementById('birthPlace').value = item.userMeta.birthPlace;
+
+            this.processFormSubmission();
+            this.closeLibrary();
+            this.showToast(`Loaded ${item.userMeta.firstName}'s blueprint!`, 'success');
+          });
+
+          card.querySelector('.delete-btn').addEventListener('click', async () => {
+            if (db && currentUser && item.id && !item.id.startsWith('local_')) {
+              try {
+                await deleteDoc(doc(db, 'artifacts', appId, 'users', currentUser.uid, 'charts', item.id));
+              } catch(e) { console.warn("Error deleting doc", e); }
+            } else {
+              let existing = JSON.parse(localStorage.getItem('astro_saved_charts') || '[]');
+              existing = existing.filter(x => x.id !== item.id);
+              localStorage.setItem('astro_saved_charts', JSON.stringify(existing));
+              this.savedBlueprints = existing;
+              document.getElementById('libraryCountBadge').innerText = existing.length;
+              this.renderLibraryList();
+            }
+            this.showToast('Blueprint deleted.', 'info');
+          });
+
+          container.appendChild(card);
+        });
+      }
+
+      /* ==========================================================================
+         RENDER METHODS
+         ========================================================================== */
+      renderHeader() {
+        document.getElementById('userNameHeader').innerText = `${this.userData.firstName} ${this.userData.lastName}`;
+        document.getElementById('userBirthMeta').innerText = `Born ${this.userData.birthDate} at ${this.userData.isSolarChart ? '12:00 PM (Solar Chart)' : this.userData.birthTime} | ${this.userData.birthPlace}`;
+        document.getElementById('chartTypeBadge').innerText = this.userData.isSolarChart ? '• Solar Chart' : '• Precise Natal';
+
+        const sun = this.currentChartData.placements.find(p => p.id === 'Sun');
+        const moon = this.currentChartData.placements.find(p => p.id === 'Moon');
+        const asc = this.currentChartData.placements.find(p => p.id === 'Ascendant');
+
+        document.getElementById('sunSymbol').innerText = sun.symbol;
+        document.getElementById('sunName').innerText = sun.sign;
+        document.getElementById('sunDeg').innerText = sun.degreeFormatted;
+
+        document.getElementById('moonSymbol').innerText = moon.symbol;
+        document.getElementById('moonName').innerText = moon.sign;
+        document.getElementById('moonDeg').innerText = moon.degreeFormatted;
+
+        document.getElementById('ascSymbol').innerText = asc.symbol;
+        document.getElementById('ascName').innerText = asc.sign;
+        document.getElementById('ascDeg').innerText = asc.degreeFormatted;
+
+        const elemCounts = { Fire: 0, Earth: 0, Air: 0, Water: 0 };
+        this.currentChartData.placements.forEach(p => {
+          if (elemCounts[p.element] !== undefined) elemCounts[p.element]++;
+        });
+        document.getElementById('elementalSummary').innerText = 
+          `Elements: Fire (${elemCounts.Fire}) Earth (${elemCounts.Earth}) Air (${elemCounts.Air}) Water (${elemCounts.Water})`;
+      }
+
+      renderPlacementsTable() {
+        const tbody = document.getElementById('placementsTableBody');
+        tbody.innerHTML = '';
+
+        this.currentChartData.placements.forEach(p => {
+          const row = document.createElement('tr');
+          row.className = 'hover:bg-slate-900/50 transition border-b border-slate-800/40';
+
+          let elemBadgeColor = 'bg-rose-950/80 text-rose-300 border-rose-800';
+          if (p.element === 'Earth') elemBadgeColor = 'bg-emerald-950/80 text-emerald-300 border-emerald-800';
+          if (p.element === 'Air') elemBadgeColor = 'bg-sky-950/80 text-sky-300 border-sky-800';
+          if (p.element === 'Water') elemBadgeColor = 'bg-indigo-950/80 text-indigo-300 border-indigo-800';
+
+          row.innerHTML = `
+            <td class="py-3.5 px-6 font-semibold text-slate-100 flex items-center space-x-3">
+              <span class="text-xl text-amber-400 w-6 text-center">${p.symbol}</span>
+              <span>${p.name}</span>
+            </td>
+            <td class="py-3.5 px-6 font-serif">
+              <span class="text-slate-200">${p.sign}</span>
+            </td>
+            <td class="py-3.5 px-6 font-mono text-xs text-slate-300">${p.degreeFormatted}</td>
+            <td class="py-3.5 px-6">
+              <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-mono border ${elemBadgeColor}">
+                ${p.element} • ${p.modality}
+              </span>
+            </td>
+            <td class="py-3.5 px-6 font-mono font-bold text-amber-300">${p.house}${this.getOrdinalSuffix(p.house)} House</td>
+            <td class="py-3.5 px-6 text-xs text-slate-400 max-w-xs">${p.desc}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+
+      renderNatalWheel() {
+        const container = document.getElementById('wheelSvgContainer');
+        const size = 500;
+        const center = size / 2;
+        const radius = 210;
+
+        let svgHtml = `<svg viewBox="0 0 ${size} ${size}" class="w-full h-full transform -rotate-90">`;
+        
+        svgHtml += `<circle cx="${center}" cy="${center}" r="${radius}" fill="none" stroke="#334155" stroke-width="2" />`;
+        svgHtml += `<circle cx="${center}" cy="${center}" r="${radius - 35}" fill="none" stroke="#1e293b" stroke-width="1.5" />`;
+        svgHtml += `<circle cx="${center}" cy="${center}" r="${radius - 90}" fill="#0b0f19" stroke="#334155" stroke-width="1" />`;
+
+        for (let i = 0; i < 12; i++) {
+          const angle = (i * 30) * (Math.PI / 180);
+          const xOuter = center + radius * Math.cos(angle);
+          const yOuter = center + radius * Math.sin(angle);
+          const xInner = center + (radius - 90) * Math.cos(angle);
+          const yInner = center + (radius - 90) * Math.sin(angle);
+
+          svgHtml += `<line x1="${xInner}" y1="${yInner}" x2="${xOuter}" y2="${yOuter}" stroke="#334155" stroke-width="1"/>`;
+
+          const midAngle = ((i * 30) + 15) * (Math.PI / 180);
+          const xText = center + (radius - 18) * Math.cos(midAngle);
+          const yText = center + (radius - 18) * Math.sin(midAngle);
+          svgHtml += `<text x="${xText}" y="${yText}" fill="#fbbf24" font-size="14" text-anchor="middle" dominant-baseline="central" transform="rotate(90 ${xText} ${yText})">${ZODIAC_SIGNS[i].symbol}</text>`;
+        }
+
+        const ascAngle = this.currentChartData.ascLongitude;
+        this.currentChartData.aspects.forEach(asp => {
+          const angle1 = (asp.p1.longitude - ascAngle) * (Math.PI / 180);
+          const angle2 = (asp.p2.longitude - ascAngle) * (Math.PI / 180);
+
+          const rInner = radius - 90;
+          const x1 = center + rInner * Math.cos(angle1);
+          const y1 = center + rInner * Math.sin(angle1);
+          const x2 = center + rInner * Math.cos(angle2);
+          const y2 = center + rInner * Math.sin(angle2);
+
+          let strokeColor = 'rgba(59, 130, 246, 0.4)';
+          if (asp.quality === 'Hard') strokeColor = 'rgba(244, 63, 94, 0.4)';
+          if (asp.type === 'Conjunction') strokeColor = 'rgba(251, 191, 36, 0.6)';
+
+          svgHtml += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${strokeColor}" stroke-width="1.2"/>`;
+        });
+
+        this.currentChartData.placements.forEach(p => {
+          const relAngle = (p.longitude - ascAngle) * (Math.PI / 180);
+          const rPos = radius - 55;
+          const xP = center + rPos * Math.cos(relAngle);
+          const yP = center + rPos * Math.sin(relAngle);
+
+          svgHtml += `<circle cx="${xP}" cy="${yP}" r="11" fill="#0f172a" stroke="#fbbf24" stroke-width="1"/>`;
+          svgHtml += `<text x="${xP}" y="${yP}" fill="#f8fafc" font-size="10" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="rotate(90 ${xP} ${yP})">${p.symbol}</text>`;
+        });
+
+        svgHtml += `</svg>`;
+        container.innerHTML = svgHtml;
+      }
+
+      renderHousesGrid() {
+        const container = document.getElementById('housesGridContainer');
+        container.innerHTML = '';
+
+        this.currentChartData.houses.forEach(h => {
+          const card = document.createElement('div');
+          card.className = 'glass-card rounded-2xl p-5 border border-slate-800 hover:border-amber-500/40 transition flex flex-col justify-between';
+
+          const planetTags = h.planets.length > 0
+            ? h.planets.map(p => `<span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-xs border border-amber-500/30">${p.symbol} ${p.name}</span>`).join(' ')
+            : `<span class="text-xs text-slate-500 font-mono">Unoccupied (Empty)</span>`;
+
+          card.innerHTML = `
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-mono font-bold text-amber-400 uppercase tracking-widest">House ${h.number}</span>
+                <span class="text-lg text-slate-200 font-serif">${h.symbol} ${h.sign}</span>
+              </div>
+              <h4 class="font-serif font-bold text-base text-slate-100 mb-1">${h.meta.title}</h4>
+              <p class="text-xs text-slate-400 leading-relaxed mb-4">${h.meta.theme}</p>
+            </div>
+            <div class="pt-3 border-t border-slate-800">
+              <span class="block text-[10px] font-mono uppercase text-slate-500 mb-1.5">Occupying Energies:</span>
+              <div class="flex flex-wrap gap-1.5">${planetTags}</div>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      }
+
+      renderAspectarian() {
+        const tbody = document.getElementById('aspectsTableBody');
+        tbody.innerHTML = '';
+
+        const calloutsContainer = document.getElementById('patternCallouts');
+        calloutsContainer.innerHTML = '';
+
+        const aspects = this.currentChartData.aspects;
+
+        const dynamicHighlights = [
+          { title: 'Sun-Pluto Transformation', desc: 'Indicates deep personal magnetism, relentless regenerative focus, and a calling to master control.', highlight: aspects.some(a => (a.p1.id==='Sun'&&a.p2.id==='Pluto') || (a.p2.id==='Sun'&&a.p1.id==='Pluto')) },
+          { title: 'Mars-Uranus Breakthrough', desc: 'Instinctive drive for independence, sudden creative leaps, and aversion to external restriction.', highlight: aspects.some(a => (a.p1.id==='Mars'&&a.p2.id==='Uranus') || (a.p2.id==='Mars'&&a.p1.id==='Uranus')) },
+          { title: 'Moon-Venus Emotional Grace', desc: 'Natural diplomatic warmth, aesthetic sensitivity, and easy emotional resonance with others.', highlight: aspects.some(a => (a.p1.id==='Moon'&&a.p2.id==='Venus') || (a.p2.id==='Moon'&&a.p1.id==='Venus')) },
+        ];
+
+        dynamicHighlights.forEach(pat => {
+          const card = document.createElement('div');
+          card.className = `glass-card rounded-xl p-4 border ${pat.highlight ? 'border-amber-500/50 bg-amber-950/20' : 'border-slate-800'}`;
+          card.innerHTML = `
+            <div class="flex items-center space-x-2 mb-1">
+              <span class="w-2 h-2 rounded-full ${pat.highlight ? 'bg-amber-400' : 'bg-slate-600'}"></span>
+              <h5 class="font-serif font-bold text-sm text-slate-200">${pat.title}</h5>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">${pat.desc}</p>
+          `;
+          calloutsContainer.appendChild(card);
+        });
+
+        aspects.forEach(asp => {
+          const row = document.createElement('tr');
+          row.className = 'hover:bg-slate-900/40 transition border-b border-slate-800/40';
+
+          let aspColor = 'text-blue-400';
+          if (asp.quality === 'Hard') aspColor = 'text-rose-400';
+          if (asp.type === 'Conjunction') aspColor = 'text-amber-400';
+
+          row.innerHTML = `
+            <td class="py-3 px-5 font-semibold text-slate-200">${asp.p1.symbol} ${asp.p1.name} — ${asp.p2.symbol} ${asp.p2.name}</td>
+            <td class="py-3 px-5 font-mono ${aspColor} flex items-center space-x-1">
+              <span>${asp.symbol}</span>
+              <span>${asp.type}</span>
+            </td>
+            <td class="py-3 px-5 font-mono text-xs text-slate-400">${asp.orb}°</td>
+            <td class="py-3 px-5 text-xs text-slate-300">${asp.interpretation}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+
+      renderTransitsTab(transitData) {
+        document.getElementById('currentTransitDate').innerText = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        
+        const summaryText = document.getElementById('transitSummaryText');
+        summaryText.innerText = `Currently ${transitData.transitAspects.length} major planetary transits are overlaying your birth blueprint. Pay close attention to outer planet shifts.`;
+
+        const alertList = document.getElementById('transitAlertList');
+        alertList.innerHTML = '';
+        transitData.transitAspects.slice(0, 3).forEach(t => {
+          const alert = document.createElement('div');
+          alert.className = 'p-3 bg-purple-950/40 border border-purple-800/50 rounded-xl text-xs space-y-1';
+          alert.innerHTML = `
+            <span class="font-bold text-purple-300 block">${t.tPlanet.name} ${t.aspect} Natal ${t.nPlanet.name}</span>
+            <p class="text-slate-400">${t.effect}</p>
+          `;
+          alertList.appendChild(alert);
+        });
+
+        const tbody = document.getElementById('transitsTableBody');
+        tbody.innerHTML = '';
+
+        transitData.transitAspects.forEach(t => {
+          const row = document.createElement('tr');
+          row.className = 'hover:bg-slate-900/40 transition border-b border-slate-800/40';
+
+          row.innerHTML = `
+            <td class="py-3 px-4 font-semibold text-slate-100">${t.tPlanet.symbol} Transiting ${t.tPlanet.name}</td>
+            <td class="py-3 px-4 font-serif text-amber-300">${t.tPlanet.sign}</td>
+            <td class="py-3 px-4 font-mono text-xs text-purple-300">${t.aspect}</td>
+            <td class="py-3 px-4 font-semibold text-slate-200">${t.nPlanet.symbol} Natal ${t.nPlanet.name}</td>
+            <td class="py-3 px-4 text-xs text-slate-400">${t.effect}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+
+      getOrdinalSuffix(i) {
+        const j = i % 10, k = i % 100;
+        if (j === 1 && k !== 11) return "st";
+        if (j === 2 && k !== 12) return "nd";
+        if (j === 3 && k !== 13) return "rd";
+        return "th";
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      window.astroApp = new AppUI();
+    });
+  </script>
+</body>
+</html>
